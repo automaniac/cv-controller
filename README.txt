@@ -31,8 +31,8 @@ Ps. É recomendado o uso de um aplicativo de outro dispositivo para controlar o p
 É recomendado dar um passo para as indicadas direções nessa parte.
 
 
-	q - Pulo;
+	q - Agachamento;
 	w - Altura normal (Fique parado em pé);
-	e - Agachamento.
+	e - Pulo.
 
 	z - Mudar de aplicação/ para as aplicações, que inclue Subway Surf e Fruit Ninja atualmente.  
