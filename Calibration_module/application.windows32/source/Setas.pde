@@ -1,11 +1,9 @@
-boolean drag=false;
-
-void fruitNinja(){
+void setas(){
         background(50);
         fill(255);
         textAlign(CENTER);  
         textSize(20);
-        text("Fruit Ninja",width/2,height/20);
+        text("Jogos com setas",width/2,height/20);
         video.loadPixels();
         for(int i=0;i<1;i++){
           avgX[i]=0;
@@ -49,32 +47,63 @@ void fruitNinja(){
         line(0,player.crouchH,width,player.crouchH);
         line(player.leftW,0,player.leftW,height);
         line(player.rightW,0,player.rightW,height);
+        line(0,player.jumpH,width,player.jumpH);
+        line(0,player.crouchH,width,player.crouchH);
+        line(player.leftW,0,player.leftW,height);
+        line(player.rightW,0,player.rightW,height);
         try{
           if(!not){
              not=true; 
-            thread("fN");
+            thread("goSetas");
           }
         } catch (Exception AWTException){}
 }
 
-void fN() throws AWTException{
-          if (count[0] > 0) {// Quantidade de pixels para formar um ponto
+void goSetas() throws AWTException{
+  
+  for(int i=0;i<1;i++){
+            
+          if (count[i] > 0) {// Quantidade de pixels para formar um ponto
             
             
+               if(avgY[0]<=player.jumpH && player.localizH!=CIMA){
+                 
+                 bot.keyPress(38);
+                 bot.keyRelease(38);
+                 println("cima");
+                 player.localizH=CIMA;
+                 
+               } else  if(avgY[0]>=player.crouchH && player.localizH!=BAIXO){
+                 
+                 bot.keyPress(40);
+                 bot.keyRelease(40);
+                 println("baixo");
+                 player.localizH=BAIXO;
+               } else if(avgY[0]<player.crouchH && avgY[0]>player.jumpH && player.localizH!=CENTRO){
+                 
+                 player.localizH=CENTRO;
+                 println("centro");
+                 
+               } else if(avgX[0]<=player.rightW && player.localizW!=DIREITA){
+                 
+                 bot.keyPress(39);
+                 bot.keyRelease(39);
+                 println("direita");
+                 player.localizW=DIREITA;
+                 
+               }else  if(avgX[0]>=player.leftW && player.localizW!=ESQUERDA){
+                 
+                bot.keyPress(37);
+                 bot.keyRelease(37);
+                 println("esquerda");
+                 player.localizW=ESQUERDA;
+                 
+               }
             
-            bot.mouseMove(round(map(avgX[0],player.rightW,player.leftW,d.width,0)),round(map(avgY[0],player.jumpH,player.crouchH,0,d.height)));
-            
-            if(!drag){
-              bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-              drag=true;
-            }
-            
-          }else
-          {
-            
-             bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-             drag=false;
           }
           
+        }
+  
+  
   not = false;
 }

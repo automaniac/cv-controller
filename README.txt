@@ -22,6 +22,10 @@ Pressione os botões e clique nos pontos especificados para selecionar a cor.
 
 Após identificar os pontos corretamentes, execute as ações ENQUANTO aperta os botões.
 
+	'espaço' - mudar para cor secundária
+	m - aumentar sensibilidade;
+	n - diminuir sensibilidade.
+
 Ps. É recomendado o uso de um aplicativo de outro dispositivo para controlar o pc ou a ajuda de outra pessoa.
 
 	a - Esquerda;

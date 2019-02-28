@@ -1,13 +1,12 @@
-boolean drag=false;
 
-void fruitNinja(){
+void mouse(){
         background(50);
         fill(255);
         textAlign(CENTER);  
         textSize(20);
-        text("Fruit Ninja",width/2,height/20);
+        text("Jogos com mouse",width/2,height/20);
         video.loadPixels();
-        for(int i=0;i<1;i++){
+        for(int i=0;i<2;i++){
           avgX[i]=0;
           avgY[i]=0;
           count[i]=0;
@@ -18,7 +17,7 @@ void fruitNinja(){
             int loc = x + y * video.width;
             // What is current color
             color currentColor = video.pixels[loc];
-            for(int i=0;i<1;i++){
+            for(int i=0;i<2;i++){
               float d = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][0]), green(trackColors[i][0]), blue(trackColors[i][0])); 
               float d1 = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][1]), green(trackColors[i][1]), blue(trackColors[i][1])); 
               if (d < thresholds[i][0]*thresholds[i][0]||d1 < thresholds[i][1]*thresholds[i][1]) {
@@ -30,7 +29,7 @@ void fruitNinja(){
           }
         }
       
-        for(int i=0;i<1;i++){
+        for(int i=0;i<2;i++){
             
           if (count[i] > 0) { 
             avgX[i] = avgX[i] / count[i];
@@ -52,29 +51,40 @@ void fruitNinja(){
         try{
           if(!not){
              not=true; 
-            thread("fN");
+            thread("mouseM");
           }
         } catch (Exception AWTException){}
 }
 
-void fN() throws AWTException{
+void mouseM() throws AWTException{
           if (count[0] > 0) {// Quantidade de pixels para formar um ponto
             
             
             
             bot.mouseMove(round(map(avgX[0],player.rightW,player.leftW,d.width,0)),round(map(avgY[0],player.jumpH,player.crouchH,0,d.height)));
             
-            if(!drag){
-              bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-              drag=true;
-            }
             
-          }else
-          {
             
-             bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
-             drag=false;
           }
+          if (count[1] > 0){ 
+          
+                if(avgY[1]<=player.jumpH&& player.localizRH!=CIMA){
+                   bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                   
+                   player.localizRH=CIMA;
+                   drag=true;
+                   
+                 }
+                 else if(avgY[1]>player.jumpH && player.localizRH!=CENTRO){
+                   player.localizRH=CENTRO;
+                   if(drag){
+                     drag=false;
+                     bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+                   }
+                   
+                 }
+          
+        }
           
   not = false;
 }

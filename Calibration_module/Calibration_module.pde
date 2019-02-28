@@ -7,8 +7,8 @@ import java.awt.*;
   Robot bot;
   Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
   
-  color [] trackColors; 
-  float [] thresholds;
+  color [][] trackColors; 
+  float [][] thresholds;
   float [] avgX;
   float [] avgY;
   int [] count;
@@ -16,20 +16,22 @@ import java.awt.*;
   int cont;
   int screen;
   int step;
+  int cor;
   
   
 void setup() {
-  size(640, 640);
+  size(640, 480);
   
   video = new Capture(this,640,480);
   video.start();
   
   step= 0;
+  cor=0;
   screen= 0;
   cont= 3;
   
-  trackColors = new color[cont];
-  thresholds = new float[cont];
+  trackColors = new color[cont][2];
+  thresholds = new float[cont][2];
   avgY = new float[cont];
   avgX = new float[cont];
   count= new int[cont];
@@ -43,8 +45,10 @@ void setup() {
     
   }
   for(int i=0;i<cont;i++){
-    trackColors[i]= color(0,0,255);
-    thresholds[i]= 25;
+    trackColors[i][0]= color(0,0,255);
+    trackColors[i][1]= color(0,0,255);
+    thresholds[i][0]= 25;
+    thresholds[i][1]= 25;
   }
 
   
@@ -58,14 +62,38 @@ void draw() {
     
     case 0: 
             
-        calibration();
+      calibration();
         
     break;
     
-    case 1: 
+    case 1:
+    
+      ponG();
+      
+    break;
+    
+    case 2:
+    
+      setas();
+      
+    break;
+    
+    case 3:
+    
+      mouse();
+      
+    break;
+    
+    case 4:
+    
+      fruitNinja();
+      
+    case 5:
     
       subwaySurf();
+      
     break;
+    
   }
   
 }
@@ -75,7 +103,7 @@ void mousePressed() {
   
   if(screen==0 && mouseX + mouseY*video.width<video.pixels.length){
       int loc = mouseX + mouseY*video.width;
-      trackColors[step] = video.pixels[loc];
+      trackColors[step][cor] = video.pixels[loc];
     }
   }
   
@@ -112,7 +140,11 @@ void keyPressed(){
       case '9':
         step= Integer.parseInt(key+"");
       break;
-     
+      case ' ':
+        if(cor==0)
+          cor=1;
+        else
+          cor=0;
       
       case 'w':
         player.normalH= avgY[0];
@@ -138,12 +170,20 @@ void keyPressed(){
         player.rightW= (2*avgX[0]+player.centerW)/3;
         println("direita");
       break;
+      case 'n':
+        thresholds[step][cor]++;
+      break;
+      case 'm':
+        if(thresholds[step][cor]>0)
+          thresholds[step][cor]--;
+      break;
+        
       }
     
   }
   if(key=='z'){
         screen++;
-        if(screen>=2){
+        if(screen>=6){
           screen=0;
         }
   }
@@ -167,6 +207,10 @@ void calibration(){
   
         video.loadPixels();
         image(video, 0, 0);
+        fill(255);
+        textAlign(CENTER);  
+        textSize(20);
+        text("Calibração",width/2,height/20);
         for(int i=0;i<cont;i++){
           avgX[i]=0;
           avgY[i]=0;
@@ -180,9 +224,9 @@ void calibration(){
             // What is current color
             color currentColor = video.pixels[loc];
             for(int i=0;i<cont;i++){
-              float d = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i]), green(trackColors[i]), blue(trackColors[i])); 
-              
-              if (d < thresholds[i]*thresholds[i]) {
+              float d = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][0]), green(trackColors[i][0]), blue(trackColors[i][0])); 
+              float d1 = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][1]), green(trackColors[i][1]), blue(trackColors[i][1])); 
+              if (d < thresholds[i][0]*thresholds[i][0]||d1 < thresholds[i][1]*thresholds[i][1]) {
                 avgX[i] += x;
                 avgY[i] += y;
                 count[i]++;
@@ -197,9 +241,9 @@ void calibration(){
             avgX[i] = avgX[i] / count[i];
             avgY[i] = avgY[i] / count[i];
             // Draw a circle at the tracked pixel
-            fill(trackColors[i]);
+            fill(trackColors[i][0]);
             strokeWeight(4.0);
-            stroke(255);
+            stroke(trackColors[i][1]);
             ellipse(avgX[i], avgY[i], 24, 24);
           }
         }

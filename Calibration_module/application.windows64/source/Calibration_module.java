@@ -27,8 +27,8 @@ public class Calibration_module extends PApplet {
   Robot bot;
   Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
   
-  int [] trackColors; 
-  float [] thresholds;
+  int [][] trackColors; 
+  float [][] thresholds;
   float [] avgX;
   float [] avgY;
   int [] count;
@@ -36,6 +36,7 @@ public class Calibration_module extends PApplet {
   int cont;
   int screen;
   int step;
+  int cor;
   
   
 public void setup() {
@@ -45,11 +46,12 @@ public void setup() {
   video.start();
   
   step= 0;
+  cor=0;
   screen= 0;
   cont= 3;
   
-  trackColors = new int[cont];
-  thresholds = new float[cont];
+  trackColors = new int[cont][2];
+  thresholds = new float[cont][2];
   avgY = new float[cont];
   avgX = new float[cont];
   count= new int[cont];
@@ -63,8 +65,10 @@ public void setup() {
     
   }
   for(int i=0;i<cont;i++){
-    trackColors[i]= color(0,0,255);
-    thresholds[i]= 25;
+    trackColors[i][0]= color(0,0,255);
+    trackColors[i][1]= color(0,0,255);
+    thresholds[i][0]= 25;
+    thresholds[i][1]= 25;
   }
 
   
@@ -78,14 +82,38 @@ public void draw() {
     
     case 0: 
             
-        calibration();
+      calibration();
         
     break;
     
-    case 1: 
+    case 1:
+    
+      ponG();
+      
+    break;
+    
+    case 2:
+    
+      setas();
+      
+    break;
+    
+    case 3:
+    
+      mouse();
+      
+    break;
+    
+    case 4:
+    
+      fruitNinja();
+      
+    case 5:
     
       subwaySurf();
+      
     break;
+    
   }
   
 }
@@ -95,7 +123,7 @@ public void mousePressed() {
   
   if(screen==0 && mouseX + mouseY*video.width<video.pixels.length){
       int loc = mouseX + mouseY*video.width;
-      trackColors[step] = video.pixels[loc];
+      trackColors[step][cor] = video.pixels[loc];
     }
   }
   
@@ -132,7 +160,11 @@ public void keyPressed(){
       case '9':
         step= Integer.parseInt(key+"");
       break;
-     
+      case ' ':
+        if(cor==0)
+          cor=1;
+        else
+          cor=0;
       
       case 'w':
         player.normalH= avgY[0];
@@ -158,12 +190,20 @@ public void keyPressed(){
         player.rightW= (2*avgX[0]+player.centerW)/3;
         println("direita");
       break;
+      case 'n':
+        thresholds[step][cor]++;
+      break;
+      case 'm':
+        if(thresholds[step][cor]>0)
+          thresholds[step][cor]--;
+      break;
+        
       }
     
   }
   if(key=='z'){
         screen++;
-        if(screen>=2){
+        if(screen>=6){
           screen=0;
         }
   }
@@ -187,6 +227,10 @@ public void calibration(){
   
         video.loadPixels();
         image(video, 0, 0);
+        fill(255);
+        textAlign(CENTER);  
+        textSize(20);
+        text("Calibração",width/2,height/20);
         for(int i=0;i<cont;i++){
           avgX[i]=0;
           avgY[i]=0;
@@ -200,9 +244,9 @@ public void calibration(){
             // What is current color
             int currentColor = video.pixels[loc];
             for(int i=0;i<cont;i++){
-              float d = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i]), green(trackColors[i]), blue(trackColors[i])); 
-              
-              if (d < thresholds[i]*thresholds[i]) {
+              float d = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][0]), green(trackColors[i][0]), blue(trackColors[i][0])); 
+              float d1 = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][1]), green(trackColors[i][1]), blue(trackColors[i][1])); 
+              if (d < thresholds[i][0]*thresholds[i][0]||d1 < thresholds[i][1]*thresholds[i][1]) {
                 avgX[i] += x;
                 avgY[i] += y;
                 count[i]++;
@@ -217,9 +261,9 @@ public void calibration(){
             avgX[i] = avgX[i] / count[i];
             avgY[i] = avgY[i] / count[i];
             // Draw a circle at the tracked pixel
-            fill(trackColors[i]);
+            fill(trackColors[i][0]);
             strokeWeight(4.0f);
-            stroke(255);
+            stroke(trackColors[i][1]);
             ellipse(avgX[i], avgY[i], 24, 24);
           }
         }
@@ -240,15 +284,16 @@ public void captureEvent(Capture video) {
   video.read();
   
 }
+boolean drag=false;
 
-static int DIREITA= 1, ESQUERDA= -1, CENTRO=0, CIMA=1, BAIXO=-1;
-boolean not = false;
-
-
-public void subwaySurf(){
-        background(0);
+public void fruitNinja(){
+        background(50);
+        fill(255);
+        textAlign(CENTER);  
+        textSize(20);
+        text("Fruit Ninja",width/2,height/20);
         video.loadPixels();
-        for(int i=0;i<cont;i++){
+        for(int i=0;i<1;i++){
           avgX[i]=0;
           avgY[i]=0;
           count[i]=0;
@@ -259,38 +304,398 @@ public void subwaySurf(){
             int loc = x + y * video.width;
             // What is current color
             int currentColor = video.pixels[loc];
-            for(int i=0;i<cont;i++){
-              float d = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i]), green(trackColors[i]), blue(trackColors[i])); 
-              
-              if (d < thresholds[i]*thresholds[i]) {
+            for(int i=0;i<1;i++){
+              float d = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][0]), green(trackColors[i][0]), blue(trackColors[i][0])); 
+              float d1 = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][1]), green(trackColors[i][1]), blue(trackColors[i][1])); 
+              if (d < thresholds[i][0]*thresholds[i][0]||d1 < thresholds[i][1]*thresholds[i][1]) {
                 avgX[i] += x;
                 avgY[i] += y;
                 count[i]++;
               }
-              
             }
           }
         }
       
-        for(int i=0;i<cont;i++){
+        for(int i=0;i<1;i++){
             
           if (count[i] > 0) { 
-            
             avgX[i] = avgX[i] / count[i];
             avgY[i] = avgY[i] / count[i];
             // Draw a circle at the tracked pixel
-            fill(trackColors[i]);
+            fill(trackColors[i][0]);
             strokeWeight(4.0f);
-            stroke(255);
+            stroke(trackColors[i][1]);
             ellipse(avgX[i], avgY[i], 24, 24);
-            
           }
+        }
+        
+          
+        
         line(0,player.jumpH,width,player.jumpH);
         line(0,player.crouchH,width,player.crouchH);
         line(player.leftW,0,player.leftW,height);
         line(player.rightW,0,player.rightW,height);
+        try{
+          if(!not){
+             not=true; 
+            thread("fN");
+          }
+        } catch (Exception AWTException){}
+}
+
+public void fN() throws AWTException{
+          if (count[0] > 0) {// Quantidade de pixels para formar um ponto
+            
+            
+            
+            bot.mouseMove(round(map(avgX[0],player.rightW,player.leftW,d.width,0)),round(map(avgY[0],player.jumpH,player.crouchH,0,d.height)));
+            
+            if(!drag){
+              bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+              drag=true;
+            }
+            
+          }else
+          {
+            
+             bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+             drag=false;
+          }
+          
+  not = false;
+}
+
+public void mouse(){
+        background(50);
+        fill(255);
+        textAlign(CENTER);  
+        textSize(20);
+        text("Jogos com mouse",width/2,height/20);
+        video.loadPixels();
+        for(int i=0;i<2;i++){
+          avgX[i]=0;
+          avgY[i]=0;
+          count[i]=0;
+        }
+      
+        for (int x = 0; x < video.width; x++ ) {
+          for (int y = 0; y < video.height; y++ ) {
+            int loc = x + y * video.width;
+            // What is current color
+            int currentColor = video.pixels[loc];
+            for(int i=0;i<2;i++){
+              float d = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][0]), green(trackColors[i][0]), blue(trackColors[i][0])); 
+              float d1 = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][1]), green(trackColors[i][1]), blue(trackColors[i][1])); 
+              if (d < thresholds[i][0]*thresholds[i][0]||d1 < thresholds[i][1]*thresholds[i][1]) {
+                avgX[i] += x;
+                avgY[i] += y;
+                count[i]++;
+              }
+            }
+          }
+        }
+      
+        for(int i=0;i<2;i++){
+            
+          if (count[i] > 0) { 
+            avgX[i] = avgX[i] / count[i];
+            avgY[i] = avgY[i] / count[i];
+            // Draw a circle at the tracked pixel
+            fill(trackColors[i][0]);
+            strokeWeight(4.0f);
+            stroke(trackColors[i][1]);
+            ellipse(avgX[i], avgY[i], 24, 24);
+          }
+        }
+        
+          
+        
+        line(0,player.jumpH,width,player.jumpH);
+        line(0,player.crouchH,width,player.crouchH);
+        line(player.leftW,0,player.leftW,height);
+        line(player.rightW,0,player.rightW,height);
+        try{
+          if(!not){
+             not=true; 
+            thread("mouseM");
+          }
+        } catch (Exception AWTException){}
+}
+
+public void mouseM() throws AWTException{
+          if (count[0] > 0) {// Quantidade de pixels para formar um ponto
+            
+            
+            
+            bot.mouseMove(round(map(avgX[0],player.rightW,player.leftW,d.width,0)),round(map(avgY[0],player.jumpH,player.crouchH,0,d.height)));
+            
+            
+            
+          }
+          if (count[1] > 0){ 
+          
+                if(avgY[1]<=player.jumpH&& player.localizRH!=CIMA){
+                   bot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+                   
+                   player.localizRH=CIMA;
+                   drag=true;
+                   
+                 }
+                 else if(avgY[1]>player.jumpH && player.localizRH!=CENTRO){
+                   player.localizRH=CENTRO;
+                   if(drag){
+                     drag=false;
+                     bot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+                   }
+                   
+                 }
           
         }
+          
+  not = false;
+}
+
+public void ponG(){
+        background(50);
+        fill(255);
+        textAlign(CENTER);  
+        textSize(20);
+        text("Pong",width/2,height/20);
+        video.loadPixels();
+        for(int i=0;i<2;i++){
+          avgY[i]=0;
+          count[i]=0;
+        }
+      
+        for (int x = 0; x < video.width; x++ ) {
+          for (int y = 0; y < video.height; y++ ) {
+            int loc = x + y * video.width;
+            // What is current color
+            int currentColor = video.pixels[loc];
+            for(int i=0;i<2;i++){
+              float d = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][0]), green(trackColors[i][0]), blue(trackColors[i][0])); 
+              float d1 = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][1]), green(trackColors[i][1]), blue(trackColors[i][1])); 
+              if (d < thresholds[i][0]*thresholds[i][0]||d1 < thresholds[i][1]*thresholds[i][1]) {
+                avgX[i] += x;
+                avgY[i] += y;
+                count[i]++;
+              }
+            }
+          }
+        }
+      
+        for(int i=0;i<2;i++){
+            
+          if (count[i] > 0) { 
+            avgY[i] = avgY[i] / count[i];
+          }
+        }
+        
+        
+        
+        
+        fill(255);
+        ellipse(Pong_x,Pong_y, Pong_diam, Pong_diam);
+      
+        rect(20, avgY[0]-Pong_rectSize/2 , 10, Pong_rectSize);
+        rect(width-30, avgY[1]-Pong_rectSize/2, 10, Pong_rectSize);
+      
+        Pong_x += Pong_speedX;
+        Pong_y += Pong_speedY;
+      
+        // if ball hits movable bar, invert X direction
+        if ( Pong_x > width-30 && Pong_x < width -20 && Pong_y > avgY[1]-Pong_rectSize/2 && Pong_y < avgY[1]+Pong_rectSize/2 ) {
+          Pong_speedX = Pong_speedX * -1;
+        } else if ( Pong_x < 30 && Pong_x > 20 && Pong_y > avgY[0]-Pong_rectSize/2 && Pong_y < avgY[0]+Pong_rectSize/2 ) {
+          Pong_speedX = Pong_speedX * -1;
+        }
+      
+        // if ball hits wall, change direction of X
+        if (Pong_x < 0||Pong_x> width) {
+
+            Pong_x = width/2;
+            Pong_y = height/2;
+            Pong_speedX = random(3, 5);
+            Pong_speedY = random(3, 5);
+        }
+      
+      
+        // if ball hits up or down, change direction of Y   
+        if ( Pong_y > height || Pong_y < 0 ) {
+          Pong_speedY *= -1;
+        }
+        
+}
+
+float Pong_x=width/2, Pong_y = height/2, Pong_speedX = random(3, 5), Pong_speedY = random(3, 5);
+float Pong_diam = 10; 
+float Pong_rectSize = 200;
+public void setas(){
+        background(50);
+        fill(255);
+        textAlign(CENTER);  
+        textSize(20);
+        text("Jogos com setas",width/2,height/20);
+        video.loadPixels();
+        for(int i=0;i<1;i++){
+          avgX[i]=0;
+          avgY[i]=0;
+          count[i]=0;
+        }
+      
+        for (int x = 0; x < video.width; x++ ) {
+          for (int y = 0; y < video.height; y++ ) {
+            int loc = x + y * video.width;
+            // What is current color
+            int currentColor = video.pixels[loc];
+            for(int i=0;i<1;i++){
+              float d = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][0]), green(trackColors[i][0]), blue(trackColors[i][0])); 
+              float d1 = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][1]), green(trackColors[i][1]), blue(trackColors[i][1])); 
+              if (d < thresholds[i][0]*thresholds[i][0]||d1 < thresholds[i][1]*thresholds[i][1]) {
+                avgX[i] += x;
+                avgY[i] += y;
+                count[i]++;
+              }
+            }
+          }
+        }
+      
+        for(int i=0;i<1;i++){
+            
+          if (count[i] > 0) { 
+            avgX[i] = avgX[i] / count[i];
+            avgY[i] = avgY[i] / count[i];
+            // Draw a circle at the tracked pixel
+            fill(trackColors[i][0]);
+            strokeWeight(4.0f);
+            stroke(trackColors[i][1]);
+            ellipse(avgX[i], avgY[i], 24, 24);
+          }
+        }
+        
+          
+        
+        line(0,player.jumpH,width,player.jumpH);
+        line(0,player.crouchH,width,player.crouchH);
+        line(player.leftW,0,player.leftW,height);
+        line(player.rightW,0,player.rightW,height);
+        line(0,player.jumpH,width,player.jumpH);
+        line(0,player.crouchH,width,player.crouchH);
+        line(player.leftW,0,player.leftW,height);
+        line(player.rightW,0,player.rightW,height);
+        try{
+          if(!not){
+             not=true; 
+            thread("goSetas");
+          }
+        } catch (Exception AWTException){}
+}
+
+public void goSetas() throws AWTException{
+  
+  for(int i=0;i<1;i++){
+            
+          if (count[i] > 0) {// Quantidade de pixels para formar um ponto
+            
+            
+               if(avgY[0]<=player.jumpH && player.localizH!=CIMA){
+                 
+                 bot.keyPress(38);
+                 bot.keyRelease(38);
+                 println("cima");
+                 player.localizH=CIMA;
+                 
+               } else  if(avgY[0]>=player.crouchH && player.localizH!=BAIXO){
+                 
+                 bot.keyPress(40);
+                 bot.keyRelease(40);
+                 println("baixo");
+                 player.localizH=BAIXO;
+               } else if(avgY[0]<player.crouchH && avgY[0]>player.jumpH && player.localizH!=CENTRO){
+                 
+                 player.localizH=CENTRO;
+                 println("centro");
+                 
+               } else if(avgX[0]<=player.rightW && player.localizW!=DIREITA){
+                 
+                 bot.keyPress(39);
+                 bot.keyRelease(39);
+                 println("direita");
+                 player.localizW=DIREITA;
+                 
+               }else  if(avgX[0]>=player.leftW && player.localizW!=ESQUERDA){
+                 
+                bot.keyPress(37);
+                 bot.keyRelease(37);
+                 println("esquerda");
+                 player.localizW=ESQUERDA;
+                 
+               }
+            
+          }
+          
+        }
+  
+  
+  not = false;
+}
+static int DIREITA= 1, ESQUERDA= -1, CENTRO=0, CIMA=1, BAIXO=-1;
+boolean not = false;
+
+
+public void subwaySurf(){
+       background(50);
+        fill(255);
+        textAlign(CENTER);  
+        textSize(20);
+        text("Subway Surf",width/2,height/20);
+        video.loadPixels();
+        for(int i=0;i<2;i++){
+          avgX[i]=0;
+          avgY[i]=0;
+          count[i]=0;
+        }
+      
+        for (int x = 0; x < video.width; x++ ) {
+          for (int y = 0; y < video.height; y++ ) {
+            int loc = x + y * video.width;
+            // What is current color
+            int currentColor = video.pixels[loc];
+            for(int i=0;i<2;i++){
+              float d = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][0]), green(trackColors[i][0]), blue(trackColors[i][0])); 
+              float d1 = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][1]), green(trackColors[i][1]), blue(trackColors[i][1])); 
+              if (d < thresholds[i][0]*thresholds[i][0]||d1 < thresholds[i][1]*thresholds[i][1]) {
+                avgX[i] += x;
+                avgY[i] += y;
+                count[i]++;
+              }
+            }
+          }
+        }
+      
+        for(int i=0;i<2;i++){
+            
+          if (count[i] > 0) { 
+            avgX[i] = avgX[i] / count[i];
+            avgY[i] = avgY[i] / count[i];
+            // Draw a circle at the tracked pixel
+            fill(trackColors[i][0]);
+            strokeWeight(4.0f);
+            stroke(trackColors[i][1]);
+            ellipse(avgX[i], avgY[i], 24, 24);
+          }
+        }
+        
+          
+        
+        line(0,player.jumpH,width,player.jumpH);
+        line(0,player.crouchH,width,player.crouchH);
+        line(player.leftW,0,player.leftW,height);
+        line(player.rightW,0,player.rightW,height);
+         line(0,player.jumpH,width,player.jumpH);
+        line(0,player.crouchH,width,player.crouchH);
+        line(player.leftW,0,player.leftW,height);
+        line(player.rightW,0,player.rightW,height);
         try{
           if(!not){
              not=true; 
@@ -301,14 +706,9 @@ public void subwaySurf(){
 
 public void moveSubway() throws AWTException{
   
-  for(int i=0;i<cont;i++){
+  for(int i=0;i<2;i++){
             
           if (count[i] > 0) {// Quantidade de pixels para formar um ponto
-          
-            fill(trackColors[i]);
-            strokeWeight(4.0f);
-            stroke(255);
-            ellipse(avgX[i], avgY[i], 24, 24);
             
             switch(i){
               case 0:
@@ -411,10 +811,6 @@ public void moveSubway() throws AWTException{
                  }
                 
               break;
-              
-              case 2:
-                bot.mouseMove(round(map(avgX[2],0,width,d.width,0)),round(map(avgY[2],0,height,0,d.height)));
-              break;
             }
             
           }
@@ -424,7 +820,7 @@ public void moveSubway() throws AWTException{
   
   not = false;
 }
-  public void settings() {  size(640, 640); }
+  public void settings() {  size(640, 480); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "Calibration_module" };
     if (passedArgs != null) {
