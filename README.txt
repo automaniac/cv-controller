@@ -22,7 +22,9 @@ Pressione os botões e clique nos pontos especificados para selecionar a cor.
 
 Após identificar os pontos corretamentes, execute as ações ENQUANTO aperta os botões.
 
-	'espaço' - mudar para cor secundária
+	'espaço' - mudar para cor secundária;
+	l - alternar entre com e sem luva especial;
+
 	m - aumentar sensibilidade;
 	n - diminuir sensibilidade.
 

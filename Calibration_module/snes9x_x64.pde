@@ -1,4 +1,4 @@
-void subSurf() throws AWTException{
+void snes() throws AWTException{
   
   for(int i=0;i<2;i++){
             
