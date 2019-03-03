@@ -9,7 +9,7 @@ import java.awt.*;
   
   color [][] trackColors; 
   float [][] thresholds;
-  float [] avgX;
+  float [] avgXz;
   float [] avgY;
   int [] count;
   

@@ -37,6 +37,11 @@ void setas() throws AWTException{
                  println("esquerda");
                  player.localizW=ESQUERDA;
                  
+               }else if(avgY[0]<player.leftW && avgY[0]>player.rightW && player.localizW!=CENTRO){
+                 
+                 player.localizW=CENTRO;
+                 println("centro");
+                 
                }
           }
           
