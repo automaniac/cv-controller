@@ -23,21 +23,21 @@ void setas() throws AWTException{
                  player[0].localizH=CENTRO;
                  println("centro");
                  
-               } else if(avgX[0]<=player[0].rightW && player[0].localizW!=DIREITA){
+               } else if(avgX[0]>=player[0].leftW && player[0].localizW!=DIREITA){
                  
-                 bot.keyPress(39);
-                 bot.keyRelease(39);
-                 println("direita");
-                 player[0].localizW=DIREITA;
-                 
-               }else  if(avgX[0]>=player[0].leftW && player[0].localizW!=ESQUERDA){
-                 
-                bot.keyPress(37);
+                 bot.keyPress(37);
                  bot.keyRelease(37);
                  println("esquerda");
+                 player[0].localizW=DIREITA;
+                 
+               }else  if(avgX[0]<=player[0].rightW && player[0].localizW!=ESQUERDA){
+                 
+                bot.keyPress(39);
+                bot.keyRelease(39);
+                 println("direita");
                  player[0].localizW=ESQUERDA;
                  
-               }else if(avgY[0]<player[0].leftW && avgY[0]>player[0].rightW && player[0].localizW!=CENTRO){
+               }else if(avgX[0]>player[0].rightW && avgX[0]<player[0].leftW && player[0].localizW!=CENTRO){
                  
                  player[0].localizW=CENTRO;
                  println("centro");

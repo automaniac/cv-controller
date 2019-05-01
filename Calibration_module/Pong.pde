@@ -28,19 +28,19 @@ void ponG(){
         if (Pong_x < 0||Pong_x> width) {
 
             Pong_x = width/2;
-            Pong_y = height/2;
+            Pong_y = 480/2;
             Pong_speedX = random(3, 5);
             Pong_speedY = random(3, 5);
         }
       
       
            
-        if ( Pong_y > height || Pong_y < 0 ) {
+        if ( Pong_y > 480 || Pong_y < 0 ) {
           Pong_speedY *= -1;
         }
         
 }
 
-float Pong_x=width/2, Pong_y = height/2, Pong_speedX = random(3, 5), Pong_speedY = random(3, 5);
+float Pong_x=width/2, Pong_y = 480/2, Pong_speedX = random(3, 5), Pong_speedY = random(3, 5);
 float Pong_diam = 10; 
 float Pong_rectSize = 200;
