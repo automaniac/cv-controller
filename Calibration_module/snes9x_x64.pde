@@ -11,38 +11,38 @@ void snes() throws AWTException{
                  
                  bot.keyPress(65+i*4);
                  bot.keyRelease(65+i*4);
-                 println("cima");
+                 println("cima"+i);
                  player[i].localizH=CIMA;
                  
                } else  if(avgY[i]>=player[i].crouchH && player[i].localizH!=BAIXO){
                  
                  bot.keyPress(66+i*4);
                  bot.keyRelease(66+i*4);
-                 println("baixo");
+                 println("baixo"+i);
                  player[i].localizH=BAIXO;
                } else if(avgY[i]<player[i].crouchH && avgY[i]>player[i].jumpH && player[i].localizH!=CENTRO){
                  
                  player[i].localizH=CENTRO;
-                 println("centro");
+                 println("centroh"+i);
                  
                } else if(avgX[i]>=player[i].leftW && player[i].localizW!=DIREITA){
                  
                  bot.keyPress(67+i*4);
                  bot.keyRelease(67+i*4);
-                 println("esquerda");
+                 println("esquerda"+i);
                  player[i].localizW=DIREITA;
                  
                }else  if(avgX[i]<=player[i].rightW && player[i].localizW!=ESQUERDA){
                  
                 bot.keyPress(68+i*4);
                 bot.keyRelease(68+i*4);
-                 println("direita");
+                 println("direita"+i);
                  player[i].localizW=ESQUERDA;
                  
                }else if(avgX[i]>player[i].rightW && avgX[i]<player[i].leftW && player[i].localizW!=CENTRO){
                  
                  player[i].localizW=CENTRO;
-                 println("centro");
+                 println("centrow"+i);
                  
                }
                
@@ -53,31 +53,31 @@ void snes() throws AWTException{
                        if(avgY[i]<=player[i].jumpH && player[i].localizH!=CIMA){
                      
                      bot.keyPress(65+i*4);
-                     println("cima");
+                     println("cima"+i);
                      player[i].localizH=CIMA;
                      
                    } else  if(avgY[i]>=player[i].crouchH && player[i].localizH!=BAIXO){
                      
                      bot.keyPress(66+i*4);
-                     println("baixo");
+                     println("baixo"+i);
                      player[i].localizH=BAIXO;
                    } else if(avgY[i]<player[i].crouchH && avgY[i]>player[i].jumpH && player[i].localizH!=CENTRO){
                      
                      bot.keyRelease(65+i*4);
                          bot.keyRelease(66+i*4);
                      player[i].localizH=CENTRO;
-                     println("centro");
+                     println("centroh"+i);
                      
                    } else if(avgX[i]>=player[i].leftW && player[i].localizW!=DIREITA){
                      
                      bot.keyPress(67+i*4);
-                     println("esquerda");
-                     player[1].localizW=DIREITA;
+                     println("esquerda"+i);
+                     player[i].localizW=DIREITA;
                      
                    }else  if(avgX[i]<=player[i].rightW && player[i].localizW!=ESQUERDA){
                      
                     bot.keyPress(68+i*4);
-                     println("direita");
+                     println("direita"+i);
                      player[i].localizW=ESQUERDA;
                      
                    }else if(avgX[i]>player[i].rightW && avgX[i]<player[i].leftW && player[i].localizW!=CENTRO){
@@ -85,7 +85,7 @@ void snes() throws AWTException{
                      bot.keyRelease(67+i*4);
                      bot.keyRelease(68+i*4);
                      player[i].localizW=CENTRO;
-                     println("centro");
+                     println("centrow"+i);
                      
                    }
                 
