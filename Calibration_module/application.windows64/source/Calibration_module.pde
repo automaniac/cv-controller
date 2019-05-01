@@ -18,6 +18,12 @@ import java.awt.*;
   int step;
   int cor;
   
+  boolean luva;
+  boolean drag;
+  boolean not;
+  static int DIREITA= 1, ESQUERDA= -1, CENTRO=0, CIMA=1, BAIXO=-1;
+
+  
   
 void setup() {
   size(640, 480);
@@ -25,6 +31,9 @@ void setup() {
   video = new Capture(this,640,480);
   video.start();
   
+  luva=false;
+  not= false;
+  drag=false;
   step= 0;
   cor=0;
   screen= 0;
@@ -51,9 +60,6 @@ void setup() {
     thresholds[i][1]= 25;
   }
 
-  
-
-  
 } 
 
 void draw() {
@@ -74,24 +80,32 @@ void draw() {
     
     case 2:
     
-      setas();
+      normalApi(1,"Jogos com setas", "setas");
       
     break;
     
     case 3:
     
-      mouse();
+      normalApi(2,"Jogos com mouse", "mouse");
       
     break;
     
     case 4:
     
-      fruitNinja();
+        normalApi(1,"Fruit Ninja", "fruitNinja");
+        
+    break;
       
     case 5:
     
-      subwaySurf();
+      normalApi(2,"Subway Surf", "subSurf");
       
+    break;
+    
+    case 6:
+      
+      normalApi(2,"Snes", "snes");
+    
     break;
     
   }
@@ -177,6 +191,9 @@ void keyPressed(){
         if(thresholds[step][cor]>0)
           thresholds[step][cor]--;
       break;
+      case 'l':
+        luva=!luva;
+      break;
         
       }
     
@@ -189,19 +206,6 @@ void keyPressed(){
   }
 }
 
-class Limites{
-  float normalH=0, jumpH=0, crouchH=0, centerW=0,leftW=0,rightW=0;
-  
-  int localizH=CENTRO,localizW=CENTRO, localizRH=CENTRO, localizLH=CENTRO;
-  
-}
-
-float distSq(float x1, float y1, float z1, float x2, float y2, float z2) {
-  
-  float d = (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) +(z2-z1)*(z2-z1);
-  return d;
-  
-}
 
 void calibration(){
   
@@ -211,56 +215,8 @@ void calibration(){
         textAlign(CENTER);  
         textSize(20);
         text("Calibração",width/2,height/20);
-        for(int i=0;i<cont;i++){
-          avgX[i]=0;
-          avgY[i]=0;
-          count[i]=0;
-          
-        }
-        
-        for (int x = 0; x < video.width; x++ ) {
-          for (int y = 0; y < video.height; y++ ) {
-            int loc = x + y * video.width;
-            // What is current color
-            color currentColor = video.pixels[loc];
-            for(int i=0;i<cont;i++){
-              float d = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][0]), green(trackColors[i][0]), blue(trackColors[i][0])); 
-              float d1 = distSq(red(currentColor), green(currentColor), blue(currentColor), red(trackColors[i][1]), green(trackColors[i][1]), blue(trackColors[i][1])); 
-              if (d < thresholds[i][0]*thresholds[i][0]||d1 < thresholds[i][1]*thresholds[i][1]) {
-                avgX[i] += x;
-                avgY[i] += y;
-                count[i]++;
-              }
-            }
-          }
-        }
-        
-        for(int i=0;i<cont;i++){
-            
-          if (count[i] > 0) { 
-            avgX[i] = avgX[i] / count[i];
-            avgY[i] = avgY[i] / count[i];
-            // Draw a circle at the tracked pixel
-            fill(trackColors[i][0]);
-            strokeWeight(4.0);
-            stroke(trackColors[i][1]);
-            ellipse(avgX[i], avgY[i], 24, 24);
-          }
-        }
-        noFill();
-        stroke(255,0,255);
-        strokeWeight(2);
-        line(0,player.jumpH,width,player.jumpH);
-        line(0,player.crouchH,width,player.crouchH);
-        line(player.leftW,0,player.leftW,height);
-        line(player.rightW,0,player.rightW,height);
-  
-  
-}
-
-
-void captureEvent(Capture video) {
-  
-  video.read();
+        text("Luva="+luva,width/2,height/20+20);
+        text("Luva="+luva,width/2,height/20+20);
+        track(cont);
   
 }

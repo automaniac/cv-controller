@@ -1,12 +1,25 @@
 void normalApi(int marcadores, String name, String nameF){
-  background(50);
+  
         fill(255);
         textAlign(CENTER);  
         textSize(20);
         text(name,width/2,height/20);
         track(marcadores);
+          strokeWeight(3);
+        if(enabled){
+          stroke(0,255,0);
+        
+        } else {
+          stroke(255,0,0);
+        }
+        
+        line(0,0,640,0);
+        line(0,0,0,480);
+        line(0,480,640,480);
+        line(640,0,640,480);
+        
         try{
-          if(!not){
+          if(!not && enabled){
              not=true; 
             thread(nameF);
           }
@@ -55,18 +68,34 @@ void track(int contt){
               strokeWeight(4.0);
               stroke(trackColors[i][1]);
               ellipse(avgX[i], avgY[i], 24, 24);
+              textAlign(CENTER,CENTER);
+              fill(255);
+              textSize(10);
+              text(i,avgX[i],avgY[i]);
             }
           }
         }
         if(!har){
+          
           noFill();
-          stroke(255,0,255);
           strokeWeight(2);
-          line(0,player.jumpH,width,player.jumpH);
-          line(0,player.crouchH,width,player.crouchH);
-          line(player.leftW,0,player.leftW,height);
-          line(player.rightW,0,player.rightW,height);
-        }
+          
+          for(int i=0;i<contt;i++){
+              
+            if (count[i] > 0) {
+              stroke(trackColors[i][1]);
+              line(0,player[i].jumpH,width,player[i].jumpH);
+              line(0,player[i].crouchH,width,player[i].crouchH);
+              line(player[i].leftW,0,player[i].leftW,height);
+              line(player[i].rightW,0,player[i].rightW,height);
+              
+              }
+            }
+          }
+          
+          
+          
+        
 }
 
 void captureEvent(Capture video) {

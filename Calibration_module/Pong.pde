@@ -1,6 +1,6 @@
 void ponG(){
   
-        background(50);
+        
         fill(255);
         textAlign(CENTER);  
         textSize(20);
