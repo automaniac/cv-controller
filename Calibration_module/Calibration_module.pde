@@ -110,7 +110,6 @@ void draw() {
     break;
       
     case 5:
-    
       normalApi(4,"Snes", "snes");
       
     break;
